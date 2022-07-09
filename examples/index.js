@@ -1,32 +1,24 @@
-// This file is if you want to run some test locally, run: `node index.js`
-// From there you can use something like [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en) to send `POST` request to `localhost:8080`.
-// Note: When using Postman make sure to not send a `Content-Type` header, if it's field by default, juste delete it.
-
-const asyncBusboy = require('../');
-const http = require('http');
+import asyncBusboy from "../index.js";
+import http from "http";
 const PORT = 8080;
-
 const server = http
-  .createServer((req, res) => {
+    .createServer((req, res) => {
     if (req.method === 'POST') {
-      console.log('POST request');
-      asyncBusboy(req).then(
-        function (formData) {
-          // [You can put your tests here]
-          console.log('Files :', formData.files);
-          console.log('Fields :', formData.fields);
-
-          // We need to emit a response so that the request doesn't hang
-          res.end('It Works!! ');
-        },
-        function (error) {
-          console.log(error);
-          res.end('Something broke!! ');
-        }
-      );
-    } else if (req.method === 'GET') {
-      res.writeHead(200, { Connection: 'close' });
-      res.end(`
+        console.log('POST request');
+        asyncBusboy(req).then(function (formData) {
+            // [You can put your tests here]
+            console.log('Files :', formData.files);
+            console.log('Fields :', formData.fields);
+            // We need to emit a response so that the request doesn't hang
+            res.end('It Works!! ');
+        }, function (error) {
+            console.log(error);
+            res.end('Something broke!! ');
+        });
+    }
+    else if (req.method === 'GET') {
+        res.writeHead(200, { Connection: 'close' });
+        res.end(`
       <!doctype html>
       <html lang="en">
         <head>
@@ -53,15 +45,7 @@ const server = http
       </html>
       `);
     }
-  })
-  .listen(PORT, () => {
+})
+    .listen(PORT, () => {
     console.log('Server listening on: http://localhost:%s', PORT);
-  });
-
-// Example output:
-//
-// Server listening on: http://localhost:8080
-//   < ... form submitted ... >
-// POST request
-// Files : [ ...
-// Fields : { textfield: '...' }
+});
