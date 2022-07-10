@@ -1,12 +1,8 @@
 {
-  "name": "async-busboy",
-  "version": "2.0.1",
-  "description": "Promise based multipart form parser",
+  "name": "@revoinc/async-busboy",
+  "version": "2.0.2",
+  "description": "Promise-based multipart form parser (ESM).",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/m4nuC/async-busboy"
-  },
   "scripts": {
     "test": "NODE_ENV=test mocha specs.js --harmony --reporter spec --bail",
     "cover": "NODE_ENV=test istanbul cover -x specs.js _mocha specs.js -- --reporter spec --bail",
@@ -14,6 +10,10 @@
     "lint-fix": "prettier --write ."
   },
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revolution-robotics/revoinc-async-busboy.git"
+  },
   "keywords": [
     "koa",
     "multipart",
@@ -23,18 +23,14 @@
   "author": "Emanuel Chappat <emmanuel.chappat@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "busboy": "^1.5.0"
+    "busboy": "^1.6.0"
   },
   "devDependencies": {
     "expect": "^27.5.1",
-    "formstream": "*",
-    "istanbul": "*",
-    "mocha": "*",
-    "prettier": "^2.6.2"
+    "mocha": "^10.0.0"
   },
-  "prettier": {
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true
-  }
+  "bugs": {
+    "url": "https://github.com/revolution-robotics/revoinc-async-busboy/issues"
+  },
+  "homepage": "https://github.com/revolution-robotics/revoinc-async-busboy#readme"
 }
