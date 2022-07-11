@@ -189,5 +189,6 @@ function request () {
     fileContent[2],
     '-----------------------------paZqsnEHRufoShdX6fh0lUhXBP4k--'
   ].join('\r\n'))
+  stream.end()
   return stream
 }
