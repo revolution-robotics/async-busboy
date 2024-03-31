@@ -1,11 +1,11 @@
 BUILD_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-NAME = $(shell jq -r .name $(BUILD_DIR)package.json)
+NAME = $(shell jq -r .name $(BUILD_DIR)package.json | sed -e 's;@;;' -e 's;/;-;')
 VERSION = $(shell jq -r .version $(BUILD_DIR)package.json)
 
 SRCS =	$(BUILD_DIR)LICENSE.md						\
 	$(BUILD_DIR)Makefile						\
 	$(BUILD_DIR)README.md						\
-	$(BUILD_DIR)examples/index.js					\
+	$(BUILD_DIR)examples/upload-file				\
 	$(BUILD_DIR)index.js						\
 	$(BUILD_DIR)package.json					\
 	$(BUILD_DIR)specs.js

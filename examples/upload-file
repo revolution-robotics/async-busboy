@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+
+import asyncBusboy from '../index.js'
+import http from 'node:http'
+
+const showForm = (req, res) => {
+  res.writeHead(200, { Connection: 'close' })
+  res.end(`<!doctype html>
+      <html lang="en">
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Async Busboy upload test</title>
+          <link rel="stylesheet" href="//unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
+        </head>
+        <body>
+          <main>
+            <h1>Async Busboy upload test</h1>
+            <form method="POST" enctype="multipart/form-data">
+              <label>
+                Choose file for upload
+                <input type="file" name="filefield">
+              </label>
+              <label>
+                A text field
+                <input type="text" name="textfield" placeholder="a text field">
+              </label>
+              <button type="submit">Submit</button>
+            </form>
+          </main>
+        </body>
+      </html>`)
+}
+
+const asyncUpload = async (req, res) => {
+  try {
+    const { files, fields } = await asyncBusboy(req)
+
+    // [You can put your tests here]
+    console.log('Files :', files)
+    console.log('Fields :', fields)
+    // We need to emit a response so that the request doesn't hang
+    res.writeHead(200, { Connection: 'close' })
+    res.end('It Works!! ')
+  } catch (err) {
+    console.error(err.message)
+    res.writeHead(500, { Connection: 'close' })
+    res.end('Something broke!! ')
+  }
+}
+
+const requestListener = async (req, res) => {
+  switch (req.method) {
+    case 'GET':
+      console.log('GET request')
+      showForm(req, res)
+      break
+    case 'POST':
+      console.log('POST request')
+      await asyncUpload(req, res)
+      break
+    default:
+      console.log(`${req.method}: Unsupported request`)
+  }
+}
+
+const server = http.createServer(await requestListener)
+const PORT = 8080
+
+server.listen(PORT, () => {
+  console.log('Server listening on: http://localhost:%s', PORT)
+})
