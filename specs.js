@@ -1,7 +1,7 @@
 'use strict'
 
-import Stream from 'stream'
-import expect from 'expect'
+import Stream from 'node:stream'
+import assert from 'node:assert/strict'
 import asyncBusboy from './index.js'
 
 const fileContent = [
@@ -21,13 +21,13 @@ describe ('Async-busboy', () => {
   it('should gather all fields and streams', (done) => {
     asyncBusboy(request())
       .then((formData) => {
-        expect(Object.keys(formData.files).length).toBe(3)
-        expect(Object.keys(formData.fields).length).toBe(5)
+        assert.equal(Object.keys(formData.files).length, 3)
+        assert.equal(Object.keys(formData.fields).length, 5)
         // Check file contents
         const fileContentPromises = formData.files.map(readFileStreamPromise)
         Promise.all(fileContentPromises)
           .then((contentBufs) => {
-            contentBufs.forEach((content, index) => expect(content.toString()).toBe(fileContent[index]))
+            contentBufs.forEach((content, index) => assert.equal(content.toString(), fileContent[index]))
             done()
           })
           .catch(done)
@@ -41,11 +41,11 @@ describe ('Async-busboy', () => {
     }
     asyncBusboy(request(), { onFile: onFileHandler })
       .then((formData) => {
-        expect(Object.keys(formData.fields).length).toBe(5)
+        assert.equal(Object.keys(formData.fields).length, 5)
         // Check file contents
         Promise.all(fileContentPromises)
           .then((contentBufs) => {
-            contentBufs.forEach((content, index) => expect(content.toString()).toBe(fileContent[index]))
+            contentBufs.forEach((content, index) => assert.equal(content.toString(), fileContent[index]))
             done()
           })
           .catch(done)
@@ -56,8 +56,8 @@ describe ('Async-busboy', () => {
     asyncBusboy(request())
       .then((formData) => {
         let someCollection = formData.fields.someCollection
-        expect(Array.isArray(someCollection)).toBe(true)
-        expect(someCollection[0]).toEqual({ foo: 'foo', bar: 'bar' })
+        assert.equal(Array.isArray(someCollection), true)
+        assert.deepEqual(someCollection[0], { foo: 'foo', bar: 'bar' })
         done()
       })
       .catch(done)
@@ -66,11 +66,11 @@ describe ('Async-busboy', () => {
     asyncBusboy(request())
       .then((formData) => {
         let fileName0 = formData.fields.file_name_0
-        expect(Array.isArray(fileName0)).toBe(true)
-        expect(fileName0.length).toBe(3)
-        expect(fileName0[0]).toEqual('super alpha file')
-        expect(fileName0[1]).toEqual('super beta file')
-        expect(fileName0[2]).toEqual('super gamma file')
+        assert.equal(Array.isArray(fileName0), true)
+        assert.equal(fileName0.length, 3)
+        assert.equal(fileName0[0], 'super alpha file')
+        assert.equal(fileName0[1], 'super beta file')
+        assert.equal(fileName0[2], 'super gamma file')
         done()
       })
       .catch(done)
@@ -78,7 +78,7 @@ describe ('Async-busboy', () => {
   it('should not overwrite prototypes', (done) => {
     asyncBusboy(request())
       .then((formData) => {
-        expect(formData.fields.hasOwnProperty).toEqual(Object.prototype.hasOwnProperty)
+        assert.equal(formData.fields.hasOwnProperty, Object.prototype.hasOwnProperty)
         done()
       })
       .catch(done)
@@ -91,9 +91,9 @@ describe ('Async-busboy', () => {
     }).then(() => {
       done(makeError('Request_files_limit was not thrown'))
     }, (e) => {
-      expect(e.status).toBe(413)
-      expect(e.code).toBe('Request_files_limit')
-      expect(e.message).toBe('Reach files limit')
+      assert.equal(e.status, 413)
+      assert.equal(e.code, 'Request_files_limit')
+      assert.equal(e.message, 'Reach files limit')
       done()
     })
   })
@@ -105,9 +105,9 @@ describe ('Async-busboy', () => {
     }).then(() => {
       done(makeError('Request_fields_limit was not thrown'))
     }, (e) => {
-      expect(e.status).toBe(413)
-      expect(e.code).toBe('Request_fields_limit')
-      expect(e.message).toBe('Reach fields limit')
+      assert.equal(e.status, 413)
+      assert.equal(e.code, 'Request_fields_limit')
+      assert.equal(e.message, 'Reach fields limit')
       done()
     })
   })
